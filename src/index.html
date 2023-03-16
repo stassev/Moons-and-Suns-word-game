@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<!--
+Copyright (2022-2023) Svetlin Tassev
+-->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title id="browsertitle">Moons & Suns</title>
+    <script>
+        var now = new Date();
+        var night = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() + 1, // the next day, ...
+            0, 0, 0 // ...at 00:00:00 hours
+        );
+        var msTillMidnight = (night.getTime() - now.getTime());
+        //setTimeout('document.location.refresh()', msTillMidnight);
+        setTimeout(function() {
+            window.location.reload(true);
+        }, msTillMidnight);
+    </script>
+</head>
+<style type="text/css">
+    body {
+        /* Disables pull-to-refresh but allows overscroll glow effects. */
+        overscroll-behavior-y: contain;
+        /*overscroll-behavior: none;*/
+        overflow: hidden;
+    }
+
+    html {
+        overflow: hidden;
+        overscroll-behavior-y: contain;
+        /*touch-action: none;*/
+        /*overscroll-behavior: none;*/
+    }
+</style>
+
+<body>
+    <style>
+        #container {
+            height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    <div id="container">
+        <div style=" display: flex; flex-direction: row;justify-content: center;">
+            <div style="float:left;   margin:2px;">
+                <b><span style="font-size: 22px;" id="title">Moons & Suns</span></b><br>
+                <select id="chooseLang" onchange="changeLang()" style="background-color:#E1E1E1;border-radius:3px;border:solid;border-width:2px;border-color:#bdbdbd; padding:2px;margin:1px;">
+                    <option value="English" selected>English</option>
+                    <option value="Bulgarian">Български</option>
+                </select>
+                <button onclick="openPopUp()" id="help" style="background-color:#E1E1E1;border-radius:3px;border:solid;border-width:2px;border-color:#bdbdbd; padding:2px;margin:1px;">Help</button>
+
+                <br>
+                <hr>
+                <span id="hi"></span><br>
+                <span id="tries"></span>
+                <span id="results"></span>
+                <input type="button" id="copyres" value="Copy guess pattern" onclick="selectText()" style="display:none">
+                <p>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row;justify-content: center;">
+            <div style="float:left; background:#ffffff;  margin-right:2px;margin-top:0px;line-height:100%;border:solid;border-width:2px;border-color:#bdbdbd; padding:3px;border-radius:3px">
+                <span style="font-family: Liberation Mono,Consolas,Monaco,Lucida Console,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;  font-size: 16px;">
+                    <span id="heading">&nbsp;<u>&nbsp;&#9788;&nbsp;&nbsp;&#9790;&nbsp;&nbsp;guesses&nbsp;</u><br></span>
+                    <span id="list"></span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="guess" style="width: 23ch;height: 2ch; margin: 0;transform: translateX(-2px);
+       font-family: Liberation Mono,Consolas,Monaco,Lucida Console,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;  font-size: 16px;border:solid;border-width:2px;border-color:#bdbdbd; padding:1px;border-radius:3px" maxlength="23" enterkeyhint="done" placeholder="Enter any-length guess." oninput="this.value = this.value.toUpperCase()" onkeydown="if (event.keyCode == 13){
+                        playSuns();
+                        }"><input type="button" id="go" value="Go" onclick="playSuns()" style="background-color:#E1E1E1;border-radius:3px;border:solid;border-width:2px;border-color:#bdbdbd; padding:2px;margin:1px;text-align: center;">
+                </span>
+            </div>
+            <div style="float:left; background:#ffffff; margin-top:0px;margin-left:2px;">
+                <textarea placeholder="Your notes here ..." id="textarea" rows="15" cols="30" style="margin:0px;font-family: Liberation Mono,Consolas,Monaco,Lucida Console,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;  font-size: 14px;border:solid;border-width:2px;border-color:#bdbdbd; padding:0px;border-radius:3px"></textarea><br>
+                <span style="margin-left:0px;margin-right:1px;margin-bottom: 18px;margin-top:5px;height:4px;display: block;position:relative">
+                    <span style="position: absolute;">
+                        <textarea placeholder="Letters to shuffle" title="Lower case letters are shuffled. Capital letters are held fixed. Use dash or dot for unknown letters." id="shuf" rows="1" cols="23" style="font-family: Liberation Mono,Consolas,Monaco,Lucida Console,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;  font-size: 14px; border:solid;border-width:2px;border-color:#bdbdbd;border-radius:3px
+                    ;margin:0px;height:20px;"></textarea>
+                        <input type="button" id="btnShuff" onclick="shuff()" value="shuffle" style="background-color:#E1E1E1;color:black;border-radius:3px;border:solid;border-width:3px;border-color:#bdbdbd; padding:auto;margin-top:2px;margin-bottom:2px;text-align: center;font-size:8px;
+                    position:absolute;height:25px">
+                    </span>
+                </span>
+                <br>
+                <span id="tileGrid"></span>
+                <label class="switch">
+                    <input type="checkbox" id="dim" onchange="fadeLettersDo()">
+                    <span class="slider round" id="fadeText">Fade letter when tile is purple</span>
+                </label>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row;justify-content: center">
+            <div style="float:left;   margin-right:2px">
+                <input type="button" id="btnReveal" value="Reveal Sun and Moon locations." onclick="revealed()" style="background-color:#E1E1E1;border-radius:3px;border:solid;border-width:2px;border-color:#bdbdbd; padding:2px;margin:1px;"><br>
+                <input type="button" id="btnPractice" value="Practice on a random word." onclick="practice()" style="background-color:#E1E1E1;border-radius:3px;border:solid;border-width:2px;border-color:#bdbdbd; padding:2px;margin:1px;">
+            </div>
+            <div style="float:left;margin-right:26ch">
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row;justify-content: center">
+            <div style="float:left;   margin:2px">
+                <footer>
+                    <p><small>Copyright &copy; 2022-2023 <a href="mailto:stassev.AT.alum._.mit._.edu">Svetlin Tassev</a>. All rights reserved.</small></p>
+                </footer>
+
+            </div>
+        </div>
+        <script>
+            var encodeQ = false;
+        </script>
+        <script src="lang_enc.js"></script>
+        <script src="suns_2.0.js"></script>
+        <script>
+            if (encodeQ) {
+                // no ", #, \, |, 0123456789, %
+                var lutSize = 950; // should be larger than num_letters in longest word!!!
+                var utf8lut = " !$&'()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{}~¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏʰʱʲʳʴʵʶʷʸʹʺʻʼʽʾʿˀˁ˂˃˄˅ˆˇˈˉˊˋˌˍˎˏːˑ˒˓˔˕˖˗˘˙˚˛˜˝˞˟ˠˡˢˣˤ˥˦˧˨˩˪˫ˬ˭ˮ˯˰˱˲˳˴˵˶˷˸˹˺˻˼˽˾˿ͰͱͲͳ͵Ͷͷͺͻͼͽ΄΅ΆΈΉΊΌΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϏϐϑϒϓϔϕϖϗϘϙϚϛϜϝϞϟϠϡϢϣϤϥϦϧϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿЀЁЂЃЄЅІЇЈЉЊЋЌЍЎЏАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџѠѡѢѣѤѥѦѧѨѩѪѫѬѭѮѯѰѱѲѳѴѵѶѷѸѹѺѻѼѽѾѿҀҁ҂҃҄҅҆҇҈҉ҊҋҌҍҎҏҐґҒғҔҕҖҗҘҙҚқҜҝҞҟҠҡҢңҤҥҦҧҨҩҪҫҬҭҮүҰұҲҳҴҵҶҷҸҹҺһҼҽҾҿӀӁӂӃӄӅӆӇӈӉӊӋӌӍӎӏӐӑӒӓӔӕӖӗӘәӚӛӜӝӞӟӠӡӢӣӤӥӦӧӨөӪӫӬӭӮӯӰӱӲӳӴӵӶӷӸӹӺӻӼӽӾӿԀԁԂԃԄԅԆԇԈԉԊԋԌԍԎԏԔԕԖԗԘԙԚԛԜԝԞԟԠԡԢԣԤԥԦԧԨԩԪԫԬԭԮԯ";
+                let lut0 = utf8lut
+                let alphabet_tmp = "abcdefghijklmnopqrstuvwxyz";
+                for (let i = 0; i < alphabet_tmp.length; i++)
+                    lut0 = lut0.replaceAll(alphabet_tmp.charAt(i), "");
+                var compressed = "var en = \"" + encode(En, "abcdefghijklmnopqrstuvwxyz", lut0.slice(0, lutSize), true) + "\";  ";
+                compressed += "var en_short = \"" + encode(En_short, "abcdefghijklmnopqrstuvwxyz", lut0.slice(0, lutSize), false) + "\";  ";
+                lut0 = utf8lut;
+                alphabet_tmp = ("АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪьЮЯ").toLowerCase();
+                for (let i = 0; i < alphabet_tmp.length; i++)
+                    lut0 = lut0.replaceAll(alphabet_tmp.charAt(i), "");
+                compressed += "var bg_short = \"" + encode(Bg_short, "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪьЮЯ".toLowerCase(), lut0.slice(0, lutSize), false) + "\";  ";
+                compressed += "var bg = \"" + encode(Bg, "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪьЮЯ".toLowerCase(), lut0.slice(0, lutSize), true) + "\";";
+                // //
+                // //lut0 = utf8lut.replaceAll(("АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪьЮЯ").toLowerCase(), "").replaceAll(("ABCDEFGHIJKLMNOPQRSTUVWXYZ").toLowerCase(), "");
+                // //compressed = encodeUsingLetterComboDictionary([compressed], lut0.slice(lutSize, lutSize * 2), 0)
+                // //
+                a = document.createElement('a');
+                a.href = "data:application/octet-stream;charset=UTF-8," + compressed; //.join("|")
+                a.download = 'lang_enc.js';
+                a.click()
+            } else {
+                var En = decode(en, "abcdefghijklmnopqrstuvwxyz", false, true);
+                var En_short = decode(en_short, "abcdefghijklmnopqrstuvwxyz", true, false);
+            }
+            en = "";
+            en_short = "";
+        </script>
+        <script>
+            changeLang();
+        </script>
+    </div>
+</body>
+
+</html>
