@@ -1,14 +1,15 @@
 # Moons-and-Suns-word-game
 Moons and Suns is a word game similar to Bulls and Cows or Wordle. One can play any length word to try to guess a hidden word. The feedback that the player is given is only the number of exact matches (Suns) and near matches (Moons) between the letters of the guess and hidden word (See the rules section below). Results can be shared and look like this:
 ```
-🌑⚪🌑⚪🌑⚪⚪⚪🌑
-⚪🟡⚪🌑
-⚪⚪⚪🟡
-⚪⚪⚪
-⚪🟡🌑🌑🟡
-⚪🌑🌑🌑
-🟡🟡🟡🟡
-🟡🟡🟡🟡🟡🟡🟡
+3/16/2023
+⚪⚪🟡⚪⚪⚪⚪🌑🌑⚪
+⚪⚪⚪⚪⚪⚪
+⚪⚪🌑🌑⚪
+⚪⚪🌑⚪⚪
+⚪🟡🟡⚪
+⚪⚪🟡🟡
+⚪⚪⚪🌑⚪
+🟡🟡🟡🟡🟡
 Score: 115
 ```
 The game can be played here both in English and in Bulgarian: [Moons and Suns](https://runningonphysics.org/cows/).
