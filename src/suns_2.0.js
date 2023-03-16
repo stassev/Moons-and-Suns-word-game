@@ -8,7 +8,13 @@ var tileGrid = "";
 var lengthOfWord = -1;
 var myWord = "";
 var indexOfWord = -1;
-var results = "";
+let today = new Date();
+let month = today.getMonth() + 1;
+let day = today.getDate();
+let year = today.getFullYear().toString().substring(-2);
+
+var results = month + '/' + day + '/' + year + '<br>&#10;';
+//var results = "";
 var TotTriesDefault = 20;
 var TotTries = TotTriesDefault;
 var tries = TotTries;
@@ -20,7 +26,7 @@ const colors = ["#ffffff", "#E46795", "#66D263", "#6FB6F5"];
 var revealSunsMoons = 0;
 var listBW = "";
 var listColorized = "";
-var big_prime_number=32452867;
+var big_prime_number = 32452867;
 
 
 var NumLetters = -1;
@@ -89,7 +95,7 @@ function daysElapsed() {
 // Use number of elapsed days as seed for random number 
 function randomNumberGenerator(seed) {
     //let randomNumber = (1 + 2 / Math.PI * Math.asin(Math.sin(seed * 99))) / 2 * listOfFrequentlyUsedWords.length;
-    let randomNumber = (big_prime_number*seed) ;
+    let randomNumber = (big_prime_number * seed);
     //randomNumber = Math.floor(randomNumber);
     return randomNumber;
 }
@@ -252,7 +258,13 @@ function resetGame() {
     document.getElementById("guess").value = "";
     document.getElementById("go").disabled = false;
     currentColorIndex.fill(0);
-    results = "";
+    let today = new Date();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+    let year = today.getFullYear().toString().substring(-2);
+
+    results = month + '/' + day + '/' + year + '<br>&#10;';
+    //results = "";
     document.getElementById("copyres").style.display = "none";
     if (lengthOfWord < 7) {
         TotTries = TotTriesDefault;
@@ -358,10 +370,10 @@ function colorizeSunsMoons(guess, results) {
 function playSuns() {
     guess = document.getElementById("guess").value;
     guess = guess.toLowerCase();
-    let t=false;
+    let t = false;
     for (let i = 0; i < guess.length; i++) {
-        if (alphabet.indexOf(guess.charAt(i))<0)
-            t=true;
+        if (alphabet.indexOf(guess.charAt(i)) < 0)
+            t = true;
     }
     //alert(allWords.words);
     //let alphaInd = alphabet.indexOf(guess.charAt(0));
