@@ -1,5 +1,5 @@
 # Moons-and-Suns-word-game
-Moons and Suns is a word game similar to Bulls and Cows, Jotto or Wordle. One can play any length word to try to guess a hidden word. The feedback that the player is given is only the number of exact matches (Suns) and near matches (Moons) between the letters of the guess word and the hidden word. See the rules section below for more details.
+Moons and Suns is a word game similar to Bulls and Cows, Jotto or Wordle. One can play any length word to try to guess a hidden word. The hidden word-of-the-day is different length each day. The feedback that the player is given is only the number of exact matches (Suns) and near matches (Moons) between the letters of the guess word and the hidden word. See the rules section below for more details.
 
 Results can be shared and look like this:
 ```
