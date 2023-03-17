@@ -11,7 +11,7 @@ var indexOfWord = -1;
 let today = new Date();
 let month = today.getMonth() + 1;
 let day = today.getDate();
-let year = today.getFullYear().toString().substring(-2);
+let year = today.getFullYear().toString().substring(2);
 
 var results = month + '/' + day + '/' + year + '<br>&#10;';
 //var results = "";
@@ -261,7 +261,7 @@ function resetGame() {
     let today = new Date();
     let month = today.getMonth() + 1;
     let day = today.getDate();
-    let year = today.getFullYear().toString().substring(-2);
+    let year = today.getFullYear().toString().substring(2);
 
     results = month + '/' + day + '/' + year + '<br>&#10;';
     //results = "";
@@ -532,6 +532,7 @@ function practice() {
     lengthOfWord = myWord.length;
     alert(textPlayingForARandom + lengthOfWord + textIfYouWantToPlayWoD);
     resetGame();
+    results='';
 }
 
 function fadeLettersDo() {
