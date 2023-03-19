@@ -3,7 +3,7 @@ Moons and Suns is a word game similar to Bulls and Cows, Jotto or Wordle. One ca
 
 Results can be shared and look like this:
 ```
-3/16/2023
+3/16/23
 ⚪⚪🟡⚪⚪⚪⚪🌑🌑⚪
 ⚪⚪⚪⚪⚪⚪
 ⚪⚪🌑🌑⚪
