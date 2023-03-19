@@ -1,5 +1,8 @@
 # Moons-and-Suns-word-game
-Moons and Suns is a word game similar to Bulls and Cows, Jotto or Wordle. One can play any length word to try to guess a hidden word. The hidden word-of-the-day is different length each day. The feedback that the player is given is only the number of exact matches (Suns) and near matches (Moons) between the letters of the guess word and the hidden word. See the rules section below for more details.
+
+(Note: For the dictionary compression algorithm developed for this game, see the last section below.)
+
+Moons and Suns is a word game similar to Bulls and Cows, Jotto or Wordle. One can play any length word to try to guess a hidden word. The hidden word-of-the-day is different length each day. The feedback that the player is given is only the number of exact matches (Suns) and near matches (Moons) between the letters of the guess word and the hidden word. See the rules section below for more details. 
 
 Results can be shared and look like this:
 ```
@@ -56,4 +59,4 @@ If you press the "Reveal the Sun and Moon locations" button, the Suns and Moons 
 
 ## Dictionary compression algorithm
 
-The javascript code in `suns_2.0.js` can (de)compress a word dictionary quite efficiently -- both in terms of computational time and compressed file size. It is licensed under GPLv3. That compression is definitely necessary especially for the Bulgarian dictionary. The English dictionary contains about 200k words, and the Bulgarian dictionary contains about 1 million words. The code achieves a compression ratio of 1:12. Both compressed dictionaries reside in `lang_enc.js`.
+The javascript code in `suns_2.0.js` can (de)compress a word dictionary quite efficiently -- both in terms of computational time and compressed file size. It is licensed under GPLv3. That compression is definitely necessary especially for the Bulgarian dictionary. The English dictionary contains about 200k words, and the Bulgarian dictionary contains about 1 million words. The code achieves a compression ratio of about 1:12. Both compressed dictionaries reside in `lang_enc.js`.
