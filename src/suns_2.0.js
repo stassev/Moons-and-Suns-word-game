@@ -13,7 +13,7 @@ let today = new Date();
 let month = today.getMonth() + 1;
 let day = today.getDate();
 let year = today.getFullYear().toString().substring(2);
-
+var maxLengthNumberOfWordsLeft = 0;
 var results = month + '/' + day + '/' + year + '<br>&#10;';
 //var results = "";
 var TotTriesDefault = 20;
@@ -27,6 +27,9 @@ const colors = ["#ffffff", "#E46795", "#66D263", "#6FB6F5"];
 var revealSunsMoons = 0;
 var listBW = "";
 var listColorized = "";
+var FinalListBW = "";
+var FinalListColorized = "";
+
 var big_prime_number = 32452867;
 
 
@@ -160,7 +163,7 @@ function changeLang() {
         document.getElementById("shuf").placeholder = "Letters to shuffle";
         document.getElementById("guess").placeholder = "Enter any-length guess.";
         document.getElementById("copyres").value = "Copy guess pattern and share!";
-        document.getElementById("heading").innerHTML = "&nbsp;<u>&nbsp;&#9788;&nbsp;&nbsp;&#9790;&nbsp;&nbsp;guesses&nbsp;</u><br>";
+        document.getElementById("heading").innerHTML = "&nbsp;<u>&nbsp;&#9788;&nbsp;&nbsp;&#9790;&nbsp;&nbsp;guesses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;words&nbsp;left&nbsp;</u><br>";
         document.getElementById("fadeText").innerHTML = "Fade letter when tile is purple";
         document.getElementById("btnReveal").value = "Reveal Sun and Moon locations.";
         document.getElementById("btnPractice").value = "Practice on a random word.";
@@ -208,7 +211,7 @@ function changeLang() {
         document.getElementById("shuf").placeholder = "Букви за разбъркване";
         document.getElementById("guess").placeholder = "Въведете дума.";
         document.getElementById("copyres").value = "Копирайте шарката и споделете!";
-        document.getElementById("heading").innerHTML = "&nbsp;<u>&nbsp;&#9788;&nbsp;&nbsp;&#9790;&nbsp;&nbsp;опити&nbsp;</u><br>";
+        document.getElementById("heading").innerHTML = "&nbsp;<u>&nbsp;&#9788;&nbsp;&nbsp;&#9790;&nbsp;&nbsp;опити&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;останали&nbsp;думи&nbsp;</u><br>";
         document.getElementById("fadeText").innerHTML = "Бледа буква, когато<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;квадратчето е лилаво.";
         document.getElementById("btnReveal").value = "Разкрий местата на Слънцата и Луните.";
         document.getElementById("btnPractice").value = "Играй за произволна дума.";
@@ -255,6 +258,8 @@ function resetGame() {
     revealSunsMoons = 0;
     listBW = "";
     listColorized = "";
+    FinalListBW = "";
+    FinalListColorized = "";
     document.getElementById("shuf").value = "";
     document.getElementById("guess").value = "";
     document.getElementById("go").disabled = false;
@@ -471,8 +476,15 @@ function playSuns() {
         if (revealSunsMoons == 1) {
             results = results + textHintsUsed + "<br>&#10;";
         }
+
         wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
-        results = results + emojisSunsMoons(res) + ' ' + (wordsOfGivenLength.length).toString() + "<br>&#10;";
+        let sss = (wordsOfGivenLength.length).toString()
+        if (myGuesses.length == 1) {
+            maxLengthNumberOfWordsLeft = sss.length
+        }
+        //console.log(maxLengthNumberOfWordsLeft)
+
+        results = results + ' ' + emojisSunsMoons(res) + "<br>&#10;";
 
         let countSunsString = countSuns.toString();
         let countMoonsString = countMoons.toString();
@@ -483,13 +495,23 @@ function playSuns() {
             countMoonsString = "&nbsp;" + countMoonsString;
         }
 
+        let tmp1 = '';
+        for (let i = 0; i < 20 + maxLengthNumberOfWordsLeft - sss.length - guess.length; i++) {
+            tmp1 = tmp1 + '&nbsp;'
+        }
+        tmp1 = tmp1 + sss;
+
         listBW = (listBW + "&nbsp;" + countSunsString + "&nbsp;" + countMoonsString + "&nbsp;&nbsp;" + guess.toUpperCase() + "<br>");
         listColorized = (listColorized + "&nbsp;<span style=\"color:orange;\">" + countSunsString + "</span>&nbsp;<span style=\"color:blue;\">" + countMoonsString + "</span>&nbsp;&nbsp;" + colorizeSunsMoons(guess.toUpperCase(), res) + "<br>");
-
+        FinalListBW = (FinalListBW + "&nbsp;" + countSunsString + "&nbsp;" + countMoonsString + "&nbsp;&nbsp;" + guess.toUpperCase() + tmp1 + "<br>");
+        FinalListColorized = (FinalListColorized + "&nbsp;<span style=\"color:orange;\">" + countSunsString + "</span>&nbsp;<span style=\"color:blue;\">" + countMoonsString + "</span>&nbsp;&nbsp;" + colorizeSunsMoons(guess.toUpperCase(), res) + tmp1 + "<br>");
+        let listFinal = ''
         if (revealSunsMoons === 0) {
             list = listBW;
+            listFinal = FinalListBW;
         } else {
             list = listColorized;
+            listFinal = FinalListColorized;
             revealSunsMoons = revealSunsMoons + 1;
         }
 
@@ -500,6 +522,7 @@ function playSuns() {
         }
 
         if (myWord === guess) {
+            document.getElementById("list").innerHTML = listFinal;
             document.getElementById("tries").innerHTML = textGuessedCorrecctly + (TotTries - tries) + textHereIsYourPattern;
             results += textScore + (score) + "<br>&#10;";
             document.getElementById("results").innerHTML = (results);
