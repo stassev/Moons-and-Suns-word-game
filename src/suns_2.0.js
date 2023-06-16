@@ -124,6 +124,7 @@ function selectWordGivenIndex(str) {
     } else {
         wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length === lengthOfWord);
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
+        wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == myWord.length);
     }
 }
 
@@ -664,6 +665,7 @@ function practice() {
     wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length > 2);
     myWord = wordsOfGivenLength[ind % wordsOfGivenLength.length];
     lengthOfWord = myWord.length;
+    wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == lengthOfWord);
     alert(textPlayingForARandom + lengthOfWord + textIfYouWantToPlayWoD);
     resetGame();
     results = '';
