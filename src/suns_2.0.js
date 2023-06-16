@@ -482,7 +482,7 @@ function playSuns() {
         if (myGuesses.length == 1) {
             maxLengthNumberOfWordsLeft = sss.length
         }
-        //console.log(maxLengthNumberOfWordsLeft)
+        console.log(wordsOfGivenLength)
 
         results = results + ' ' + emojisSunsMoons(res) + "<br>&#10;";
 
