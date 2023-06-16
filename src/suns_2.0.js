@@ -8,6 +8,7 @@ var tileGrid = "";
 var lengthOfWord = -1;
 var myWord = "";
 var wordsOfGivenLength = [];
+var wordsOfGivenLengthAfterReveal = [];
 var indexOfWord = -1;
 let today = new Date();
 let month = today.getMonth() + 1;
@@ -126,6 +127,7 @@ function selectWordGivenIndex(str) {
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
         wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == myWord.length);
     }
+    wordsOfGivenLengthAfterReveal = wordsOfGivenLength;
 }
 
 var already_switched = 0;
@@ -381,8 +383,8 @@ function findMatches(ws, g, suns, moons) {
     for (let w of ws) {
         //console.log(g)
         //console.log(w)
-        let w1 = w;
-        let g1 = g;
+        let w1 = w.slice();
+        let g1 = g.slice();
         let b = 0,
             c = 0;
         let l = w.length;
@@ -400,7 +402,7 @@ function findMatches(ws, g, suns, moons) {
 
         for (let i = 0; i < g1.length; i++) {
             if (w1.indexOf(g1.charAt(i)) !== -1) {
-                w1 = w1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                w1 = w1.replaceAt(w1.indexOf(g1.charAt(i)), "2")
                 c++;
             }
         }
@@ -426,11 +428,9 @@ function findMatchesAfterRevealing(ws, g, ans) {
         let add = true;
         //console.log(g)
         //console.log(w)
-        let w1 = w;
-        let g1 = g;
-        let ans1 = ans;
-        let b = 0,
-            c = 0;
+        let w1 = w.slice();
+        let g1 = g.slice();
+        let ans1 = ans.slice();
         let l = g1.length;
 
 
@@ -458,9 +458,9 @@ function findMatchesAfterRevealing(ws, g, ans) {
         }
         for (let i = 0; i < g1.length; i++) {
             if (ans1.indexOf(g1.charAt(i)) !== -1) {
-                ans1 = ans1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                ans1 = ans1.replaceAt(w1.indexOf(g1.charAt(i)), "2")
                 if (w1.indexOf(g1.charAt(i)) !== -1)
-                    w1 = w1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                    w1 = w1.replaceAt(w1.indexOf(g1.charAt(i)), "2")
                 else
                     add = false;
             }
@@ -536,18 +536,26 @@ function playSuns() {
             }
         }
 
+        let sss = 0;
         if (revealSunsMoons == 1) {
             results = results + textHintsUsed + "<br>&#10;";
         }
-        if (revealSunsMoons === 0)
-            wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
-        else
-            wordsOfGivenLength = findMatchesAfterRevealing(wordsOfGivenLength, guess, myWord)
-        let sss = (wordsOfGivenLength.length).toString()
+        wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
+
+        wordsOfGivenLengthAfterReveal = findMatchesAfterRevealing(wordsOfGivenLengthAfterReveal, guess, myWord)
+
+        if (revealSunsMoons === 0) {
+            console.log(wordsOfGivenLength)
+            sss = (wordsOfGivenLength.length).toString()
+        } else {
+            sss = (wordsOfGivenLengthAfterReveal.length).toString()
+            console.log(wordsOfGivenLengthAfterReveal)
+        }
+
         if (myGuesses.length == 1) {
             maxLengthNumberOfWordsLeft = sss.length
         }
-        console.log(wordsOfGivenLength)
+
 
         results = results + ' ' + emojisSunsMoons(res) + "<br>&#10;";
 
@@ -666,6 +674,7 @@ function practice() {
     myWord = wordsOfGivenLength[ind % wordsOfGivenLength.length];
     lengthOfWord = myWord.length;
     wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == lengthOfWord);
+    wordsOfGivenLengthAfterReveal = wordsOfGivenLength;
     alert(textPlayingForARandom + lengthOfWord + textIfYouWantToPlayWoD);
     resetGame();
     results = '';
@@ -683,6 +692,7 @@ function fadeLettersDo() {
 function revealed() {
     document.getElementById("btnReveal").disabled = true;
     revealSunsMoons = 1;
+    console.log(wordsOfGivenLengthAfterReveal);
     list = listColorized;
     score -= 10 * lengthOfWord;
     for (let i = 0; i < NumLetters; i++) {
