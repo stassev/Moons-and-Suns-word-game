@@ -416,6 +416,68 @@ function findMatches(ws, g, suns, moons) {
 }
 
 
+function findMatchesAfterRevealing(ws, g, ans) {
+    let matches = [];
+
+    //console.log(ws)
+
+    for (let w of ws) {
+        let add = true;
+        //console.log(g)
+        //console.log(w)
+        let w1 = w;
+        let g1 = g;
+        let ans1 = ans;
+        let b = 0,
+            c = 0;
+        let l = g1.length;
+
+
+        if (l > w1.length) {
+            l = w1.length
+        }
+        let l1 = l;
+        if (l > ans1.length) {
+            l = ans1.length
+        }
+        for (let i = 0; i < l; i++) {
+            if ((ans1.charAt(i) === g1.charAt(i))) {
+                if (w1.charAt(i) === g1.charAt(i)) {
+                    w1 = w1.replaceAt(i, "2");
+                    g1 = g1.replaceAt(i, "1");
+                    ans1 = ans1.replaceAt(i, "0");
+                } else {
+                    add = false;
+                }
+            }
+        }
+        for (let i = 0; i < l1; i++) {
+            if (w1.charAt(i) === g1.charAt(i))
+                add = false;
+        }
+        for (let i = 0; i < g1.length; i++) {
+            if (ans1.indexOf(g1.charAt(i)) !== -1) {
+                ans1 = ans1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                if (w1.indexOf(g1.charAt(i)) !== -1)
+                    w1 = w1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                else
+                    add = false;
+            }
+            if (w1.indexOf(g1.charAt(i)) !== -1)
+                add = false;
+        }
+        //console.log(g)
+        //console.log(w1)
+        //c -= b;
+        if (add) {
+            matches.push(w);
+            //console.log(w);
+        }
+    }
+    //console.log(matches)
+    return matches;
+}
+
 function playSuns() {
     guess = document.getElementById("guess").value;
     guess = guess.toLowerCase();
@@ -476,8 +538,10 @@ function playSuns() {
         if (revealSunsMoons == 1) {
             results = results + textHintsUsed + "<br>&#10;";
         }
-
-        wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
+        if (revealSunsMoons === 0)
+            wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
+        else
+            wordsOfGivenLength = findMatchesAfterRevealing(wordsOfGivenLength, guess, myWord)
         let sss = (wordsOfGivenLength.length).toString()
         if (myGuesses.length == 1) {
             maxLengthNumberOfWordsLeft = sss.length
