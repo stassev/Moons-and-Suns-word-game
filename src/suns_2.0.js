@@ -7,6 +7,7 @@ var currentColorIndex = Array(30).fill(0);
 var tileGrid = "";
 var lengthOfWord = -1;
 var myWord = "";
+var wordsOfGivenLength = [];
 var indexOfWord = -1;
 let today = new Date();
 let month = today.getMonth() + 1;
@@ -114,11 +115,11 @@ function calculateLengthOfWordOfTheDay() {
 
 function selectWordGivenIndex(str) {
     if (str == "gt") {
-        let wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length >= lengthOfWord);
+        wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length >= lengthOfWord);
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
         lengthOfWord = myWord.length;
     } else {
-        let wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length === lengthOfWord);
+        wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length === lengthOfWord);
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
     }
 }
@@ -366,6 +367,49 @@ function colorizeSunsMoons(guess, results) {
 
 
 
+function findMatches(ws, g, suns, moons) {
+    let matches = [];
+
+    //console.log(ws)
+
+    for (let w of ws) {
+        //console.log(g)
+        //console.log(w)
+        let w1 = w;
+        let g1 = g;
+        let b = 0,
+            c = 0;
+        let l = w.length;
+        if (l > g1.length) {
+            l = g1.length
+        }
+
+        for (let i = 0; i < l; i++) {
+            if (w1.charAt(i) === g1.charAt(i)) {
+                b++;
+                w1 = w1.replaceAt(i, "2");
+                g1 = g1.replaceAt(i, "1");
+            }
+        }
+
+        for (let i = 0; i < g1.length; i++) {
+            if (w1.indexOf(g1.charAt(i)) !== -1) {
+                w1 = w1.replaceAt(w1.indexOf(g.charAt(i)), "2")
+                c++;
+            }
+        }
+        //console.log(g)
+        //console.log(w1)
+        //c -= b;
+        if (b === suns && c === moons) {
+            matches.push(w);
+            //console.log(w);
+        }
+    }
+    //console.log(matches)
+    return matches;
+}
+
 
 function playSuns() {
     guess = document.getElementById("guess").value;
@@ -400,6 +444,8 @@ function playSuns() {
             N = guess.length;
         }
 
+
+
         let res = "";
         for (var j = 0; j < guess.length; j++) {
             res = res + "0";
@@ -425,7 +471,8 @@ function playSuns() {
         if (revealSunsMoons == 1) {
             results = results + textHintsUsed + "<br>&#10;";
         }
-        results = results + emojisSunsMoons(res) + "<br>&#10;";
+        wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
+        results = results + emojisSunsMoons(res) + ' ' + (wordsOfGivenLength.length).toString() + "<br>&#10;";
 
         let countSunsString = countSuns.toString();
         let countMoonsString = countMoons.toString();
@@ -532,7 +579,7 @@ function practice() {
     lengthOfWord = myWord.length;
     alert(textPlayingForARandom + lengthOfWord + textIfYouWantToPlayWoD);
     resetGame();
-    results='';
+    results = '';
 }
 
 function fadeLettersDo() {
