@@ -122,10 +122,10 @@ function selectWordGivenIndex(str) {
         wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length >= lengthOfWord);
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
         lengthOfWord = myWord.length;
+        wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == lengthOfWord);
     } else {
         wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length === lengthOfWord);
         myWord = wordsOfGivenLength[indexOfWord % wordsOfGivenLength.length];
-        wordsOfGivenLength = listOfFrequentlyUsedWords.filter(words => words.length == myWord.length);
     }
     wordsOfGivenLengthAfterReveal = wordsOfGivenLength;
 }
