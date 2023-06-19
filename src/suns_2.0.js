@@ -693,6 +693,12 @@ function revealed() {
     document.getElementById("btnReveal").disabled = true;
     revealSunsMoons = 1;
     console.log(wordsOfGivenLengthAfterReveal);
+    let tmp1 = '';
+    for (let i = 0; i < 7 + maxLengthNumberOfWordsLeft - wordsOfGivenLengthAfterReveal.length.toString().length; i++) {
+        tmp1 = tmp1 + '&nbsp;'
+    }
+    tmp1 = tmp1 + wordsOfGivenLengthAfterReveal.length.toString();
+    FinalListColorized = (FinalListColorized + "&nbsp;&nbsp;-&nbsp;&nbsp;-&nbsp;&nbsp;(hints used)&nbsp;" + tmp1 + "<br>");
     list = listColorized;
     score -= 10 * lengthOfWord;
     for (let i = 0; i < NumLetters; i++) {
