@@ -32,7 +32,7 @@ var FinalListBW = "";
 var FinalListColorized = "";
 
 var big_prime_number = 32452867;
-
+var oneLeft = false;
 
 var NumLetters = -1;
 var firstReset = 1;
@@ -257,6 +257,7 @@ function resetGameAndWord() {
 
 function resetGame() {
     document.getElementById("btnReveal").disabled = false;
+    document.getElementById("btnOne").disabled = false;
     score = 150;
     revealSunsMoons = 0;
     listBW = "";
@@ -537,7 +538,7 @@ function playSuns() {
         }
 
         let sss = 0;
-        if (revealSunsMoons == 1) {
+        if ((revealSunsMoons == 1) || oneLeft) {
             results = results + textHintsUsed + "<br>&#10;";
         }
         wordsOfGivenLength = findMatches(wordsOfGivenLength, guess, countSuns, countMoons)
@@ -547,9 +548,13 @@ function playSuns() {
         if (revealSunsMoons === 0) {
             console.log(wordsOfGivenLength)
             sss = (wordsOfGivenLength.length).toString()
+            if (oneLeft && (wordsOfGivenLength.length == 1))
+                alert('One possible word is left in short list.');
         } else {
             sss = (wordsOfGivenLengthAfterReveal.length).toString()
             console.log(wordsOfGivenLengthAfterReveal)
+            if (oneLeft && (wordsOfGivenLength.length == 1))
+                alert('One possible word is left in short list.');
         }
 
         if (myGuesses.length == 1) {
@@ -709,6 +714,11 @@ function revealed() {
 }
 
 
+function hintOne() {
+    document.getElementById("btnOne").disabled = true;
+    oneLeft = true;
+    score -= 10;
+}
 
 function gen_compressed_str(str) {
     let len = str.length;
