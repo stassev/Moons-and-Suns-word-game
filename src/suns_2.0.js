@@ -553,7 +553,7 @@ function playSuns() {
         } else {
             sss = (wordsOfGivenLengthAfterReveal.length).toString()
             console.log(wordsOfGivenLengthAfterReveal)
-            if (oneLeft && (wordsOfGivenLength.length == 1))
+            if (oneLeft && (wordsOfGivenLengthAfterReveal.length == 1))
                 alert('One possible word is left in short list.');
         }
 
@@ -718,6 +718,8 @@ function hintOne() {
     document.getElementById("btnOne").disabled = true;
     oneLeft = true;
     score -= 10;
+    if (wordsOfGivenLength.length == 1)
+        alert('One possible word is left in short list.');
 }
 
 function gen_compressed_str(str) {
